@@ -252,7 +252,7 @@ var parseGrid = function(){
 		var units = Number(s.querySelector(".units").textContent.trim().split(",").join(""))||0;
 		var farms = Number(s.querySelectorAll(".structures span").item(0).textContent.trim())||0;
 		var cities = Number(s.querySelectorAll(".structures span").item(1).textContent.trim())||0;
-		var rebels = Number(s.querySelectorAll(".structures span").item(2).textContent.trim())||0;
+		var rebels = Number(s.querySelectorAll(".structures span").item(2).textContent.replace("R", "").trim())||0;
 		var graffiti = s.querySelector(".countryName").textContent.toLowerCase().trim()||"";
 		var domain = Math.ceil(id/42);
 		
@@ -398,43 +398,64 @@ var buildCommand = function(commandType, params){
 	if(commandType == "deployOption1"){
 		for(var i=0;i<filteredSquares.length;i++){
 			var square = filteredSquares[i];
-			commandString += "d "  + (square.units-params[1].value) + " " + square.id + " " + params[0].value + ";";
+			var val = square.units-params[1].value;
+			if(val>0){
+				commandString += "d "  + (val) + " " + square.id + " " + params[0].value + ";";
+			}
 		}
 	}
 	else if(commandType == "deployOption2"){
 		for(var i=0;i<filteredSquares.length;i++){
 			var square = filteredSquares[i];
-			commandString += "d "  + (square.units-1) + " " + square.id + " " + params[0].value + ";";
+			var val = square.units-1;
+			if(val>0){
+				commandString += "d "  + (val) + " " + square.id + " " + params[0].value + ";";
+			}
 		}
 	}
 	else if(commandType == "deployOption3"){
 		for(var i=0;i<filteredSquares.length;i++){
 			var square = filteredSquares[i];
-			commandString += "d "  + (params[1].value) + " " +  params[0].value + " " + square.id + ";";
+			var val = params[1].value;
+			if(val>0){
+				commandString += "d "  + (val) + " " +  params[0].value + " " + square.id + ";";
+			}
 		}
 	}
 	else if(commandType == "deployOption4"){
 		for(var i=0;i<filteredSquares.length;i++){
 			var square = filteredSquares[i];
-			commandString += "d "  + (params[1].value-square.units) + " " +  params[0].value + " " + square.id + ";";
+			var val = params[1].value-square.units;
+			if(val>0){
+				commandString += "d "  + (val) + " " +  params[0].value + " " + square.id + ";";
+			}
 		}
 	}
 	else if(commandType == "exchangeOption1"){
 		for(var i=0;i<filteredSquares.length;i++){
 			var square = filteredSquares[i];
-			commandString += "ex " + (params[0].value) + " " + square.id + ";";
+			var val = params[0].value
+			if(val>0){
+				commandString += "ex " + (val) + " " + square.id + ";";
+			}
 		}
 	}
 	else if(commandType == "exchangeOption2"){
 		for(var i=0;i<filteredSquares.length;i++){
 			var square = filteredSquares[i];
-			commandString += "ex " + (square.units-1) + " " + square.id + ";";
+			var val = square.units-1;
+			if(val>0){
+				commandString += "ex " + (val) + " " + square.id + ";";
+			}
 		}
 	}
 	else if(commandType == "exchangeOption3"){
 		for(var i=0;i<filteredSquares.length;i++){
 			var square = filteredSquares[i];
-			commandString += "ex " + (square.units-params[0].value) + " " + square.id + ";";
+			var val = square.units-params[0].value;
+			if(val){
+				commandString += "ex " + (val) + " " + square.id + ";";
+			}
 		}
 	}
 	else if(commandType == "graffitiOption1"){
@@ -446,49 +467,73 @@ var buildCommand = function(commandType, params){
 	else if(commandType == "razeFarmsOption1"){
 		for(var i=0;i<filteredSquares.length;i++){
 			var square = filteredSquares[i];
-			commandString += "raze f " + square.id + " " + parms[0].value + ";";
+			var val = parms[0].value;
+			if(val>0){
+				commandString += "raze f " + square.id + " " + val + ";";
+			}
 		}
 	}
 	else if(commandType == "razeFarmsOption2"){
 		for(var i=0;i<filteredSquares.length;i++){
 			var square = filteredSquares[i];
-			commandString += "raze f " + square.id + " " + square.farms + ";";
+			var val = square.farms;
+			if(val>0){
+				commandString += "raze f " + square.id + " " + val + ";";
+			}
 		}
 	}
 	else if(commandType == "razeFarmsOption3"){
 		for(var i=0;i<filteredSquares.length;i++){
 			var square = filteredSquares[i];
-			commandString += "raze f " + square.id + " " + (square.farms-params[0].value) + ";";
+			var val = square.farms-params[0].value;
+			if(val>0){
+				commandString += "raze f " + square.id + " " + (val) + ";";
+			}
 		}
 	}
 	else if(commandType == "razeCitiesOption1"){
 		for(var i=0;i<filteredSquares.length;i++){
 			var square = filteredSquares[i];
-			commandString += "raze c " + square.id + " " + parms[0].value + ";";
+			var val = parms[0].value;
+			if(val>0){
+				commandString += "raze c " + square.id + " " + val + ";";
+			}
 		}
 	}
 	else if(commandType == "razeCitiesOption2"){
 		for(var i=0;i<filteredSquares.length;i++){
 			var square = filteredSquares[i];
-			commandString += "raze c " + square.id + " " + square.cities + ";";
+			var val = square.cities;
+			if(val>0){
+				commandString += "raze c " + square.id + " " + val + ";";
+			}
 		}
 	}
 	else if(commandType == "razeCitiesOption3"){
 		for(var i=0;i<filteredSquares.length;i++){
 			var square = filteredSquares[i];
-			commandString += "raze c " + square.id + " " + (square.cities-params[0].value) + ";";
+			var val = square.cities-params[0].value;
+			if(val>0){
+				commandString += "raze c " + square.id + " " + (val) + ";";
+			}
 		}
 	}
 	else if(commandType == "rebelOptions3"){
 		for(var i=0;i<filteredSquares.length;i++){
 			var square = filteredSquares[i];
-			commandString += "r p " + params[0].value + " " + square.id + ";";
+			var val = params[0].value;
+			if(val>0){
+				commandString += "r p " + val + " " + square.id + ";";
+			}
 		}
 	}
 	else if(commandType == "rebelOptions4"){
 		for(var i=0;i<filteredSquares.length;i++){
 			var square = filteredSquares[i];
-			commandString += "r p " + square.rebels + " " + square.id + ";";
+			var val = square.rebels;
+			if(val>0){
+				commandString += "r p " + val + " " + square.id + ";";
+			}
 		}
 	}
 	else if(commandType == "annexOptions1"){
