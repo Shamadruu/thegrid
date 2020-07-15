@@ -251,7 +251,7 @@ function origreadUpdatedSquares(milliseconds) {
                     }
 					else if(tmpname == "myst"){
 						var sq = document.getElementById(tdId);
-						sq.innerHTML = '<span class="numberBox" style="color:silver;" id="numberBox' + id + '">' + id + '</span><span class="serf" title="" style="color:#;" id="se' + id + '"></span><div class="name" title="" id="name' + id + '" style="color:#;">?</div><div class="units" style="color:silver;" id="u' + id + '">?</div><div class="structures"><span style="color:silver;display:none;" id="f' + id + '">?</span><span style="color:silver;display:none;" id="' + id + '">?</span><span style="color:red;display:none;" id="r' + id + '">?</span></div><div class="countryName" style="color:#;" id="cn' + id + '">MYST</div>';
+						sq.innerHTML = '<span class="numberBox" style="color:silver;" id="numberBox' + id + '">' + id + '</span><span class="serf" title="" style="color:#;" id="se' + id + '"></span><div class="name" title="" style="color:#;">?</div><div class="units" style="color:silver;" id="u' + id + '">?</div><div class="structures"><span style="color:silver;display:none;" id="f' + id + '">?</span><span style="color:silver;display:none;" id="' + id + '">?</span><span style="color:red;display:none;" id="r' + id + '">?</span></div><div class="countryName" style="color:#;" id="cn' + id + '">MYST</div>';
 						sq.style.visibility = "";
 					}
                 }
