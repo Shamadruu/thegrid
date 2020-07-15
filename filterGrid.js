@@ -233,28 +233,41 @@ var constructUI = function(){
 var parseGrid = function(){
 	document.querySelector('#masterTable').querySelectorAll("td").forEach(function(s){ 
 		var player, perm;
-		var name = s.querySelector(".name").title.toLowerCase().trim()||"thegridadmin";
-		
-		if(players[name]||false){
-			player = players[name]
+		if(s.querySelector(".name") !== null){
+			var name = s.querySelector(".name").title.toLowerCase().trim()||"thegridadmin";
+			
+			if(players[name]||false){
+				player = players[name]
+			}
+			else{
+				player = new Player(name)
+				players[name] = player;
+			}
+			if(s.style.borderStyle.indexOf("double")!== -1){
+				perm = true;
+			}
+			else{
+				perm = false;
+			}
+			var id = Number(s.querySelector(".numberBox").textContent.trim())||0;
+			var units = Number(s.querySelector(".units").textContent.trim().split(",").join(""))||0;
+			var farms = Number(s.querySelectorAll(".structures span").item(0).textContent.trim())||0;
+			var cities = Number(s.querySelectorAll(".structures span").item(1).textContent.trim())||0;
+			var rebels = Number(s.querySelectorAll(".structures span").item(2).textContent.replace("R", "").trim())||0;
+			var graffiti = s.querySelector(".countryName").textContent.toLowerCase().trim()||"";
+			var domain = Math.ceil(id/42);
 		}
 		else{
-			player = new Player(name)
-			players[name] = player;
+			var name = "myst"
+			
+			if(players[name]||false){
+				player = players[name]
+			}
+			else{
+				player = new Player(name)
+				players[name] = player;
+			}
 		}
-		if(s.style.borderStyle.indexOf("double")!== -1){
-			perm = true;
-		}
-		else{
-			perm = false;
-		}
-		var id = Number(s.querySelector(".numberBox").textContent.trim())||0;
-		var units = Number(s.querySelector(".units").textContent.trim().split(",").join(""))||0;
-		var farms = Number(s.querySelectorAll(".structures span").item(0).textContent.trim())||0;
-		var cities = Number(s.querySelectorAll(".structures span").item(1).textContent.trim())||0;
-		var rebels = Number(s.querySelectorAll(".structures span").item(2).textContent.replace("R", "").trim())||0;
-		var graffiti = s.querySelector(".countryName").textContent.toLowerCase().trim()||"";
-		var domain = Math.ceil(id/42);
 		
 		var square = new Square(name, id, units, farms, cities, rebels, graffiti, perm, domain);
 		squares[id] = square;
