@@ -1,3 +1,294 @@
+//Override psybin ui with fixed function
+function origreadUpdatedSquares(milliseconds) {
+    var xmlhttp = generateXmlhttpObject();
+    var url = "/games/the-grid-2/grid/updatedSquares.php?" + Math.random();
+    var text = "";
+    var read = "";
+    var id = "";
+    var tdId = "";
+    var name = "";
+    var units = "";
+    var farms = "";
+    var cities = "";
+    var rebels = "";
+    var numberBox = "";
+    var carvings = "";
+    var serfs = "";
+    var tmpname = ""; // PSY: Added
+
+    /*if (isHolidayMode) {
+       resetXmasTree();
+    }*/
+
+    if (!US.readOnce) {
+
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                // on page load error can occur reading empty JSON
+                if (xmlhttp.responseText.length < 20) // may need to adjust
+                {
+                    window.clearTimeout(timeout);
+                    timeout = window.setTimeout(function() {
+                        readUpdatedSquares(milliseconds)
+                    }, milliseconds);
+                }
+
+                // every so often a syntax error can occur from a partial response
+                try {
+                    read = eval("(" + xmlhttp.responseText + ")");
+                } catch (error) {
+                    //document.getElementById("terminal").value = "Please refresh the page. " + xmlhttp.responseText; //TEMP
+                    //document.getElementById("terminal").value = "Something might have gotten out of whack in the code. Please refresh the page if you notice any bugs."; 
+                    try {
+                        console.log("Something might have gotten out of whack in the code. Please refresh the page if you notice any bugs.");
+                    } catch (error) {}
+                    window.clearTimeout(timeout);
+                    timeout = window.setTimeout(function() {
+                        readUpdatedSquares(milliseconds)
+                    }, milliseconds);
+                }
+
+                var dataLength = 0;
+                if (read.data != undefined) {
+                    dataLength = read.data.length;
+                    //if (readData == "") {
+                    readData = read.data;
+                    //}
+                }
+
+                for (var i = 0; i < dataLength; i++) {
+                    id = read.data[i].td;
+                    tdId = "td" + id;
+                    if (document.getElementById("name" + id) !== null) {
+                        tmpname = document.getElementById("name" + id).title.toLowerCase();
+                    } else {
+                        tmpname = "myst";
+                    }
+                    // if the square id is OK, update the square attributes
+                    if (document.getElementById(tdId) != null && document.getElementById("name" + id) !== null) {
+                        name = "name" + id;
+                        units = "u" + id;
+                        farms = "f" + id;
+                        cities = "c" + id;
+                        rebels = "r" + id;
+                        numberBox = "numberBox" + id;
+                        carvings = "cn" + id;
+                        serfs = "se" + id;
+
+                        document.getElementById(name).innerHTML = read.data[i].na;
+                        document.getElementById(name).title = read.data[i].nt;
+                        document.getElementById(units).innerHTML = commafy(read.data[i].u);
+                        document.getElementById("name" + id).style.fontSize = '14px';
+                        document.getElementById("name" + id).style.fontFamily = 'Arial';
+                        //document.getElementById("name" + id).style.fontWeight = 'bold';
+                        //document.getElementById("name" + id).style.textShadow = '-1px -1px 0 #FFFFFF, 1px -1px 0 #FFFFFF, -1px 1px 0 #FFFFFF, 1px 1px 0 #FFFFFF';
+                        document.getElementById("name" + id).style.textShadow = '1px 1px 0 #000000';
+                        if (parseInt(read.data[i].u) < 1) {
+                            document.getElementById(units).innerHTML = "";
+                        }
+
+                        // farms
+                        document.getElementById("f" + id).innerHTML = "<img src='http://upload.wikimedia.org/wikipedia/commons/9/98/Farm-Fresh_tree.png' height='9px'>" + " " + read.data[i].f;
+                        //document.getElementById(farms).innerHTML = "F" + read.data[i].f;
+                        if (read.data[i].f > 0) {
+                            document.getElementById(farms).style.display = "";
+                        } else {
+                            document.getElementById(farms).style.display = "none";
+                        }
+
+                        // cities
+                        document.getElementById("c" + id).innerHTML = "<img src = 'https://cdn1.iconfinder.com/data/icons/berlin/32x32/bank.png' height='9px'>" + " " + read.data[i].c;
+                        //document.getElementById(cities).innerHTML = "C" + read.data[i].c;
+                        if (read.data[i].c > 0) {
+                            document.getElementById(cities).style.display = "";
+                        } else {
+                            document.getElementById(cities).style.display = "none";
+                        }
+
+                        // rebels
+                        document.getElementById(rebels).innerHTML = "R" + read.data[i].r;
+                        if (read.data[i].r > 0) {
+                            document.getElementById(rebels).style.display = "";
+                        } else {
+                            document.getElementById(rebels).style.display = "none";
+                        }
+
+                        // perm square
+                        if (read.data[i].p == 1) {
+                            document.getElementById(tdId).style.borderStyle = "double";
+                            document.getElementById(tdId).style.borderWidth = "6px";
+                        } else {
+                            document.getElementById(tdId).style.borderStyle = "solid";
+                            document.getElementById(tdId).style.borderWidth = "2px";
+                        }
+
+                        // karma border
+                        if (read.data[i].nt.match('kb_')) {
+                            var kb = read.data[i].nt;
+                            kb = kb.slice(3) + "px";
+                            document.getElementById(tdId).style.borderWidth = kb;
+                        }
+
+                        // colors
+
+                        if (tmpname in nameOverride) {
+                            document.getElementById(name).style.color = nameOverride[tmpname];
+                        } else {
+                            document.getElementById(name).style.color = "#" + read.data[i].co;
+                        }
+
+
+                        // PSY: borderOverride stuff below
+                        if (tmpname in borderOverride) {
+                            document.getElementById(tdId).style.borderColor = borderOverride[tmpname];
+                        } else {
+                            document.getElementById(tdId).style.borderColor = "#" + read.data[i].bc;
+                        }
+                        savedBorderColors[i] = read.data[i].bc;
+
+                        // activity color 
+                        if (read.data[i].t != undefined) {
+                            document.getElementById(numberBox).style.color = read.data[i].t;
+                            document.getElementById(units).style.color = read.data[i].t;
+                        }
+
+                        // serfs
+                        if (read.data[i].se != undefined) {
+                            document.getElementById(serfs).innerHTML = read.data[i].se;
+                        }
+
+                        // carvings 
+                        if (read.data[i].cn != undefined) {
+                            var cnvar = read.data[i].cn;
+                            var cnvarLength = cnvar.length;
+                            if (cnvarLength > 11) {
+                                document.getElementById(carvings).title = cnvar;
+                                cnvar = cnvar.substr(0, 11) + "...";
+                            } else {
+                                document.getElementById(carvings).title = "";
+                            }
+                            //cnvar = cnvar.replace("GRIDDLE", "G.");
+                            if (read.data[i].cn != 'sea') {
+                                document.getElementById(carvings).innerHTML = cnvar;
+                            }
+                            document.getElementById(carvings).style.color = "#" + read.data[i].co;
+                            //document.getElementById(carvings).style.color = "silver";
+                            savedCarvings[i] = cnvar;
+
+                            // polymuf
+                            /*
+                            if (read.data[i].cn == "POLYMUF")
+                            {
+                               document.getElementById(carvings).style.color = "#" + randomColorValue();
+                               document.getElementById(name).style.color = "#" + randomColorValue();
+                               document.getElementById(tdId).style.borderColor = "#" + randomColorValue();
+                            }  
+                            */
+
+                            // sea
+                            if (read.data[i].cn == "SEA") {
+                                document.getElementById(tdId).style.backgroundColor = "#010f40";
+                            } else {
+                                // PSY: Comment this out to prevent flickering.
+                                //document.getElementById(tdId).style.backgroundColor = "#000";
+                            }
+
+                            // Holiday carvings
+                            if (isHolidayMode) {
+                                // egg
+                                if (read.data[i].cn == "EGG") {
+                                    document.getElementById(carvings).innerHTML = "EGGNOG";
+                                }
+                                // LONGSHENG
+                                if (read.data[i].cn == "LONGSHENG") {
+                                    document.getElementById(carvings).innerHTML = "STOCKINGS";
+                                }
+                                // sword
+                                if (read.data[i].cn == "SWORD") {
+                                    document.getElementById(carvings).innerHTML = "CANDYCANE";
+                                    //candycane(carvings);
+                                }
+                                // headband
+                                if (read.data[i].cn.match('HEADBAND')) {
+                                    var santaHat = read.data[i].cn;
+                                    santaHat = santaHat.replace("HEADBAND", "SANTAHAT");
+                                    document.getElementById(carvings).innerHTML = santaHat;
+                                }
+                                // wall
+                                if (read.data[i].cn == "WALL") {
+                                    document.getElementById(carvings).innerHTML = "X-MAS TREE";
+                                    xmasTree(carvings);
+                                }
+                                // seer
+                                if (read.data[i].cn == "SEER") {
+                                    document.getElementById(carvings).innerHTML = "HIGH ELF";
+                                }
+                                // blank
+                                if (read.data[i].cn == "") {
+                                    document.getElementById(carvings).style.color = "#FFFFFF";
+                                    document.getElementById(carvings).innerHTML = "SNOW";
+                                }
+                                // spires
+                                if (read.data[i].cn == "SPIRES") {
+                                    document.getElementById(carvings).innerHTML = "CHIMNEY";
+                                }
+                                // twinkle
+                                if (i == dataLength - 1 && !treesLit) {
+                                    twinkle();
+                                    treesLit = true;
+                                }
+                            }
+                        }
+
+                        // domains 
+                        if (id % 42 == 0 /* && savedCarvings[i] == "SEER"*/ ) {
+                            changeToSeerBorderColor(id, savedBorderColors[i], savedCarvings[i]);
+                        }
+
+
+
+
+                    }
+
+                }
+
+                // recursive function call to continually read in messages
+                //window.clearTimeout(timeout);
+                //timeout = window.setTimeout(function(){readUpdatedSquares(milliseconds)}, milliseconds);
+
+                US.readOnce = true;
+
+                xmlhttp = null;
+            }
+        };
+
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send(null);
+
+    } else {
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                US.lastCheckedNum = US.checkNum;
+                US.checkNum = xmlhttp.responseText;
+                if (US.lastCheckedNum != US.checkNum && US.lastCheckedNum != 0) {
+                    US.readOnce = false;
+                }
+
+                xmlhttp = null;
+            }
+        };
+
+        xmlhttp.open("GET", "/games/the-grid-2/grid/txt/check_updatedSquaresLog.txt?" + Math.random(), true);
+        xmlhttp.send(null);
+
+    }
+
+    window.clearTimeout(timeout);
+    timeout = window.setTimeout(function() {
+        readUpdatedSquares(milliseconds)
+    }, milliseconds);
+}
+
 (function(){
 document.querySelector("#terminal").maxLength = 2500;
 var runInterval = 1000;
