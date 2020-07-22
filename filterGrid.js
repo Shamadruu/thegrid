@@ -1,277 +1,117 @@
-//Override psybin ui 
+document.head.innerHTML += '<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>'
+//Override built in psybin function
 function Sq(){}
 function initTouchSq(){}
 function paintSqs(){}
 function origreadUpdatedSquares(){};
-(function(){
-function Sq(){}
-function initTouchSq(){}
-function paintSqs(){}
-//Override psybin ui with fixed function
-function origreadUpdatedSquares(milliseconds) {
-    var xmlhttp = generateXmlhttpObject();
-    var url = "/games/the-grid-2/grid/updatedSquares.php?" + Math.random();
-    var text = "";
-    var read = "";
-    var id = "";
-    var tdId = "";
-    var name = "";
-    var units = "";
-    var farms = "";
-    var cities = "";
-    var rebels = "";
-    var numberBox = "";
-    var carvings = "";
-    var serfs = "";
-    var tmpname = ""; // PSY: Added
-
-    if (!US.readOnce) {
-
-        xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                // on page load error can occur reading empty JSON
-                if (xmlhttp.responseText.length < 20) // may need to adjust
-                {
-                    window.clearTimeout(timeout);
-                    timeout = window.setTimeout(function() {
-                        readUpdatedSquares(milliseconds)
-                    }, milliseconds);
-                }
-
-                // every so often a syntax error can occur from a partial response
-                try {
-                    read = eval("(" + xmlhttp.responseText + ")");
-                } catch (error) {
-                    //document.getElementById("terminal").value = "Please refresh the page. " + xmlhttp.responseText; //TEMP
-                    //document.getElementById("terminal").value = "Something might have gotten out of whack in the code. Please refresh the page if you notice any bugs."; 
-                    try {
-                        console.log("Something might have gotten out of whack in the code. Please refresh the page if you notice any bugs.");
-                    } catch (error) {}
-                    window.clearTimeout(timeout);
-                    timeout = window.setTimeout(function() {
-                        readUpdatedSquares(milliseconds)
-                    }, milliseconds);
-                }
-
-                var dataLength = 0;
-                if (read.data != undefined) {
-                    dataLength = read.data.length;
-                    readData = read.data;	
-                    //updateSquareObjs(readData);
-					parseGrid();
-                    for (var i = 0; i < dataLength; i++) {
-                        id = read.data[i].td;
-						var square = squares[id];
-                        tdId = "td" + id;
-                        if (document.getElementById("name" + id) !== null) {
-                            tmpname = document.getElementById("name" + id).title.toLowerCase();
-                        } else {
-                            tmpname = "myst";
-                        }
-                        // if the square id is OK, update the square attributes
-                        if (document.getElementById(tdId) != null && tmpname !== "myst") {
-							var td = document.getElementById(tdId);
-							if(square.graffiti == undefined){
-								square.graffiti = document.getElementById("cn" + id).textContent;
-							}
-							var str = "";
-							str += '<span class="numberBox" style="color:silver;" id="numberBox' + id + '">' + id + '</span><div class="name" title="" style="color:' + square.color + ';" id="name' + id + '">' + square.alias + '</div><div class="units" style="color:silver;" id="u' + id + '">' + square.units + '</div><div class="structures">';
-							if(square,farms != undefined && square.farms > 0){
-								str += '<span style="color:silver;" id="f' + id + '">F' + square.farms + ' </span>';
-							}
-							else{
-								str += '<span style="color:silver;" id="f' + id + '"> </span>'
-							}
-							if(square,cities!= undefined && square.cities > 0){
-								str += '<span style="color:silver;" id="c' + id + '">C' + square.cities + ' </span>';
-							}
-							else{
-								str += '<span style="color:silver;" id="c' + id + '"> </span>';
-							}
-							if(square.rebels!= undefined && square.rebels > 0){
-								str += '<span style="color:red;" id="r' + id + '">R' + square.rebels + ' </span></div>';
-							}
-							else{
-								str += '<span style="color:red;" id="r' + id + '"></span> </div>';
-							}
-							if(square.graffiti != undefined){
-								str += '<div class="countryName" style="color:#' + square.color + ';" id="cn' + id + '">' + square.graffiti + ' </div>';
-							}
-							else{
-								str += '<div class="countryName" style="color:#' + square.color + ';" id="cn' + id + '"> </div>';
-							}
-							td.innerHTML = str;
-							td.style.borderColor = square.borderColor;
-							td.style.color = square.color;
-							
-						} else if (tmpname == "myst" && document.getElementById(tdId) != null) {
-							var sq = document.getElementById(tdId);
-							sq.innerHTML = '<span class="numberBox" style="color:silver;" id="numberBox' + id + '">' + id + '</span><span class="serf" title="" style="color:#;" id="se' + id + '"></span><div class="name" title="" style="color:#;">?</div><div class="units" style="color:silver;" id="u' + id + '">?</div><div class="structures"><span style="color:silver;display:none;" id="f' + id + '">?</span><span style="color:silver;display:none;" id="' + id + '">?</span><span style="color:red;display:none;" id="r' + id + '">?</span></div><div class="countryName" style="color:#;" id="cn' + id + '">MYST</div>';
-							sq.style.visibility = "";
-						}
-					}
-
-					// recursive function call to continually read in messages
-					//window.clearTimeout(timeout);
-					//timeout = window.setTimeout(function(){readUpdatedSquares(milliseconds)}, milliseconds);
-
-					US.readOnce = true;
-
-					xmlhttp = null;
-				}
+//fixes start here
+function getDataAndUpdate() {
+	$.ajax({
+		url: "/games/the-grid-2/grid/updatedSquares.php",
+		success: update,
+		dataType: "json"
+	});
+}
+function update(response){
+	var data = response.data; 
+	updateSquares(data);
+	for (var i = 0; i < data.length; i++) {
+		var id = data[i].td;
+		var square = squares[id];
+		if(square.graffiti == undefined){
+			square.graffiti = document.getElementById("cn" + id).textContent;
+		}
+		var tdId = "td" + id;
+		if (document.getElementById(tdId) != null && square.graffiti != "MSYT") {
+			var td = document.getElementById(tdId);
+			
+			var str = "";
+			str += '<span class="numberBox" style="color:silver;" id="numberBox' + id + '">' + id + '</span><div class="name" title="" style="color:' + square.color + ';" id="name' + id + '">' + square.alias + '</div><div class="units" style="color:silver;" id="u' + id + '">' + commafy(square.units) + '</div><div class="structures">';
+			if(square.farms != undefined && square.farms > 0){
+				str += '<span style="color:silver;" id="f' + id + '">F' + commafy(square.farms) + ' </span>';
 			}
-		};
+			else{
+				str += '<span style="color:silver;" id="f' + id + '"> </span>'
+			}
+			if(square.cities != undefined && square.cities > 0){
+				str += '<span style="color:silver;" id="c' + id + '">C' + commafy(square.cities) + ' </span>';
+			}
+			else{
+				str += '<span style="color:silver;" id="c' + id + '"> </span>';
+			}
+			if(square.rebels != undefined && square.rebels > 0){
+				str += '<span style="color:red;" id="r' + id + '">R' + square.rebels + ' </span></div>';
+			}
+			else{
+				str += '<span style="color:red;" id="r' + id + '"></span> </div>';
+			}
+			if(square.graffiti != undefined){
+				str += '<div class="countryName" style="color:#' + square.color + ';" id="cn' + id + '">' + square.graffiti + ' </div>';
+			}
+			else{
+				str += '<div class="countryName" style="color:#' + square.color + ';" id="cn' + id + '"> </div>';
+			}
+			td.innerHTML = str;
+			td.style.borderColor = square.borderColor;
+			td.style.color = square.color;
+			
+		} else if (tmpname == "myst" && document.getElementById(tdId) != null) {
+			var sq = document.getElementById(tdId);
+			sq.innerHTML = '<span class="numberBox" style="color:silver;" id="numberBox' + id + '">' + id + '</span><span class="serf" title="" style="color:#;" id="se' + id + '"></span><div class="name" title="" style="color:#;"></div><div class="units" style="color:silver;" id="u' + id + '">MYST</div><div class="structures"><span style="color:silver;display:none;" id="f' + id + '">?</span><span style="color:silver;display:none;" id="' + id + '"></span><span style="color:red;display:none;" id="r' + id + '">?</span></div><div class="countryName" style="color:#;" id="cn' + id + '">MYST</div>';
+			sq.style.visibility = "";
+			sq.style.borderColor = "#666";
+		}
+	}
+}
+function updateLoop(timeout){
+	getDataAndUpdate();
+	window.clearTimeout(timeout);
+	timeout = window.setTimeout(function() {
+		updateLoop(timeout);
+	}, updateDelay);
+}
+var Square = function(name, id, units, farms, cities, rebels, graffiti, perm, domain, borderColor, color, alias) {
+	this.owner = name.toLowerCase();
+	this.id = id;
+	this.units = units;
+	this.farms = farms;
+	this.cities = cities;
+	this.rebels = rebels;
+	this.graffiti = graffiti;
+	this.perm = perm;
+	this.domain = domain;
+	this.borderColor = '#' + borderColor;
+	this.color = '#' + color;
+	this.alias = alias;
 
-		xmlhttp.open("GET", url, true);
-		xmlhttp.send(null);
+	this.income = 0;
+	this.unitProduction = 0;
 
-        } 
-		else {
-            xmlhttp.onreadystatechange = function() {
-                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    US.lastCheckedNum = US.checkNum;
-                    US.checkNum = xmlhttp.responseText;
-                    if (US.lastCheckedNum != US.checkNum && US.lastCheckedNum != 0) {
-                        US.readOnce = false;
-                    }
-
-                    xmlhttp = null;
-                }
-            };
-
-            xmlhttp.open("GET", "/games/the-grid-2/grid/txt/check_updatedSquaresLog.txt?" + Math.random(), true);
-            xmlhttp.send(null);
-
-        }
-
-        window.clearTimeout(timeout);
-        timeout = window.setTimeout(function() {
-            readUpdatedSquares(milliseconds)
-        }, milliseconds);
-    }
-
-
-    var Square = function(name, id, units, farms, cities, rebels, graffiti, perm, domain, borderColor, color, alias) {
-        this.owner = name;
-        this.id = id;
-        this.units = units;
-        this.farms = farms;
-        this.cities = cities;
-        this.rebels = rebels;
-        this.graffiti = graffiti;
-        this.perm = perm;
-        this.domain = domain;
-        this.borderColor = '#' + borderColor;
-        this.color = '#' + color;
-        this.alias = alias;
-
-        this.income = 0;
-        this.unitProduction = 0;
-
-        return this;
-    }
-
-    var squareObjs = {};
-    var updateSquareObjs = function(data) {
-        for (var i=0;i<data.length;i++) {
-			var square = data[i];
-            var id = square.td;
-            var perm = square.p == 1;
-            squareObjs[id] = new Square(square.nt, id, square.u, square.f, square.c, square.r, square.cn, perm, Math.ceil(id / 42), square.bc, square.co, square.na);
-        }
-    }
-	origreadUpdatedSquares(10000);
-	document.body.querySelector("span").style.display = "none";
-	chainTimer = 500;
+	return this;
+}
+var squares = {};
+var updateSquares = function(data) {
+	for (var i=0;i<data.length;i++) {
+		var square = data[i];
+		var id = square.td;
+		var perm = square.p == 1;
+		squares[id] = new Square(square.nt, id, square.u, square.f, square.c, square.r, square.cn, perm, Math.ceil(id / 42), square.bc, square.co, square.na);
+	}
+	squaresArray = objectToArray(squares);
+}
+var updateDelay = 5000;
+getDataAndUpdate();
+updateLoop();
+document.body.querySelector("span").style.display = "none";
+chainTimer = 250;
 	
 	document.querySelector("#terminal").maxLength = 2500;
-	var runInterval = 1000;
 	var squares = {};
-	var players = {};
 	var squaresArray;
 	var functionalGraffities = ["wall", "spire", "domlord", "seer", "castle", "gnome", "longsheng", "myst", "nospawn", "pil-a", "pil-n", "pil-s", "monk", "rebel", "samurai", "sea", "seer", "spawn", "sword", "thug", "wildcard", "windmill"];
 	var filterKeys = ["owner", "units", "rebels", "farms", "cities", "id", "graffiti", "perm", "domain"];
 	var filteredSquares;
 
-	var Player = function(name){
-		this.name = name;
-		this.units = 0;
-		this.rebels = 0;
-		this.farms = 0;
-		this.cities = 0; 
-		this.squares = 0;
-		this.squareList = {};
-		
-		this.incomeMultiplier = 1;
-		this.income = 100;
-		this.unitMultiplier = 1;
-		this.unitProduction = 0;
-		this.additionalEnergyIncome = 0;
-		
-		this.graffiti = {};
-		
-		for(var i=0;i<functionalGraffities.length;i++){
-			this.graffiti[functionalGraffities[i]] = 0;
-		}
-		
-		return this;
-	}
-	Player.prototype.update = function(){
-		for(var square in this.squareList){
-			var s = this.squareList[square];
-			this.squares++;
-			this.units += s.units;
-			this.rebels += s.rebels;
-			this.farms += s.farms;
-			this.cities += s.cities;
-			
-			if(functionalGraffities.indexOf(s.graffiti) != -1){
-				this.graffiti[s.graffiti]++;
-				
-				if(s.graffiti == "longsheng"){
-					this.incomeMultiplier += 0.05;
-				}
-				else if(s.graffiti == "castle"){
-					this.incomeMultiplier += 0.02;
-				}
-			}
-		}
-		this.incomeMultiplier = (~~this.incomeMultiplier*100)/100;
-		for(var square in this.squareList){
-			var s = this.squareList[square];
-			s.update(this.incomeMultiplier);
-			this.income += s.income;
-			this.unitProduction += s.unitProduction;
-		}
-	}
-
-	var Square = function(name, id, units, farms, cities, rebels, graffiti, perm, domain, borderColor, color, alias){
-		this.owner = name;
-		this.id = id;
-		this.units = units;
-		this.farms = farms;
-		this.cities = cities;
-		this.rebels = rebels;
-		this.graffiti = graffiti;
-		this.perm = perm;
-		this.domain = domain;
-		this.borderColor = "#" + borderColor;
-		this.color = "#" + color;
-		this.alias = alias;
-		
-		this.income = 0;
-		this.unitProduction = 0;
-
-		return this;
-	}
-	Square.prototype.update = function(m){
-		this.income = Number(this.farms*55*m*(100-this.rebels)/100);
-		
-		this.unitProduction = (Number(this.cities*(100-this.rebels)/100));
-		if(this.graffiti == "sword"){
-			this.unitProduction *= 5;
-		}
-	}
 	var constructUI = function(){
 		var filterUIRaw = '<div style="display:none" id="filterUI"> \n <div style="text-align:center;font-size:1.5em">Filter UI <span id="closeUI" style="float: right;font-size: 1em;cursor:pointer;">X</span></div>\n <hr> \n <div id="tabs">\n<span class="active" target="filterTab">Filtering</span>\n<span class="" target="commandTab">Commands</span>\n</div>\n <div class="collapsible collapsible-expanded tab" id="filterTab"> \n <div class="content"> \n <div id="filterParameters" style="width:50%;float:left;border-right:2px solid #999"> \n <div style="text-align:center;font-size:1.25em">Filter Parameters</div>\n <div class="key" id="keyOwner"> \n<span class="name">Owner: </span>\n <span class="comp"> \n <select style="width:50px"> \n <option value="=" selected="">=</option> \n <option value="!=">!=</option> \n </select> \n </span> \n<span class="value">\n<input name="owner" type="text">\n</span>\n </div>\n <div class="key" id="keyUnits"> \n<span class="name">Units:</span>\n <span class="comp"> \n <select style="width:50px"> \n <option value="<">&lt; </option> \n <option value="<=">&lt;=</option> \n <option value="=" selected="">=</option> \n <option value="!=">!=</option> \n <option value=">=">&gt;=</option> \n <option value=">">&gt; </option> \n </select> \n </span> \n<span class="value"><input name="units" type="number"></span>\n </div>\n <div class="key" id="keyRebels"> \n<span class="name">Rebels: </span>\n <span class="comp"> \n <select style="width:50px"> <option value="<">&lt; </option> <option value="<=">&lt;=</option> \n <option value="=" selected="">=</option> \n <option value="!=">!=</option> <option value=">=">&gt;=</option> \n <option value=">">&gt; </option> \n </select> \n </span> \n<span class="value"><input name="rebels" type="number"></span>\n </div>\n <div class="key" id="keyFarms"> \n<span class="name">Farms: </span>\n <span class="comp"> \n <select style="width:50px"> \n <option value="<">&lt; </option> \n <option value="<=">&lt;=</option> \n <option value="=" selected="">=</option> \n <option value="!=">!=</option> \n <option value=">=">&gt;=</option> \n <option value=">">&gt; </option> \n </select> \n </span> \n<span class="value">\n<input name="farms" type="number">\n</span>\n </div>\n <div class="key" id="keyCities"> \n<span class="name">Cities: </span>\n <span class="comp"> \n <select style="width:50px"> \n <option value="<">&lt; </option> \n <option value="<=">&lt;=</option> \n <option value="=" selected="">=</option> \n <option value="!=">!=</option> \n <option value=">=">&gt;=</option> \n <option value=">">&gt; </option> \n </select> \n </span> \n<span class="value"><input name="cities" type="number"></span>\n </div>\n <div class="key" id="keyID"> \n<span class="name">ID: </span>\n <span class="comp"> \n <select style="width:50px"> \n <option value="<">&lt; </option> \n <option value="<=">&lt;=</option> \n <option value="=" selected="">=</option> \n <option value="!=">!=</option> \n <option value=">=">&gt;=</option> \n <option value=">">&gt; </option> \n </select> \n </span> \n<span class="value"><input name="id" type="number"></span>\n </div>\n <div class="key" id="keyDomain"> \n<span class="name">Domain: </span>\n <span class="comp"> \n <select style="width:50px"> \n <option value="<">&lt; </option> \n <option value="<=">&lt;=</option> \n <option value="=" selected="">=</option> \n <option value="!=">!=</option> \n <option value=">=">&gt;=</option> \n <option value=">">&gt; </option> \n </select> \n </span> \n<span class="value"><input name="domain" type="number"></span>\n </div>\n <div class="key" id="keyGraffiti"> \n<span class="name">Graffiti: </span>\n <span class="comp"> \n <select style="width:50px"> \n <option value="=" selected="">=</option> \n <option value="!=">!=</option> \n </select> \n </span> \n <span style="width:30%;display:inline-block;text-align:center"> \n <select style="text-align:center;width:80px;font-size:.8em"> \n <option value="wall">wall</option> \n <option value="spire">spire</option> \n <option value="domlord">domlord</option> \n <option value="seer">seer</option> \n <option value="castle">castle</option> \n <option value="gnome">gnome</option> \n <option value="longsheng">longsheng</option> \n <option value="myst">myst</option> \n <option value="nospawn">nospawn</option> \n <option value="pil-a">pil-a</option> \n <option value="pil-n">pil-n</option> \n <option value="pil-s">pil-s</option> \n <option value="monk">monk</option> \n <option value="rebel">rebel</option> \n <option value="samurai">samurai</option> \n <option value="sea">sea</option> \n <option value="seer">seer</option> \n <option value="spawn">spawn</option> \n <option value="sword">sword</option> \n <option value="thug">thug</option> \n <option value="wildcard">wildcard</option> \n <option value="windmill">windmill</option> \n <option selected=""> </option> \n </select> \n </span> \n<span class="value" style="width:25.8%"><input name="graffiti" style="width:82.5px;font-size:.8em"></span>\n </div>\n <div class="key" id="keyPerm"> \n<span class="name">Permanence: </span>\n <span class="comp"> \n <select style="width:50px"> \n <option value="=" selected="">=</option> \n <option value="!=">!=</option> \n </select> </span> \n <span class="value"> \n <select style="width:50px"> \n <option value="" selected=""></option> \n <option value="true">true</option> \n <option value="false">false</option> \n </select> \n </span> \n </div>\n <div style="text-align:center">\n<button id="filterSquares" style="background:#999;color:white;border:1px outset #999">Filter Squares</button>\n</div>\n </div>\n <div id="filterOutputPane" style="width:calc(50% - 2px);float:left"> \n <div style="text-align:center;font-size:1.25em">Filter Output</div>\n <div id="filterOutput" style="overflow-y:scroll;overflow-wrap:normal;font-size:1em"></div>\n </div>\n </div>\n </div>\n <div class="collapsible collapsible-collapsed tab" id="commandTab"> \n <div class="content"> \n <div id="commandSelectionPane"> \n <div style="text-align:center;font-size:1.25em">Command Selection</div>\n <div id="commandOptions"> \n <div class="collapsible collapsible-collapsed" id="deploy"> \n<input type="radio" name="commandOptions" id="choiceDeploy" value="deploy"> <label for="choiceDeploy">Deploy</label>\n <ul class="content" id="deployOptions"> \n <li>\n<input type="radio" name="deployOptions" id="deployOption1" value="deployOption1">\n<label for="deployOption1">Deploy from [filtered squares] to\n<input type="number" value="" name="targetSquare"> so [units on filtered square]=\n<input type="number" value="" name="targetAmount">\n</label>\n</li>\n <li>\n<input type="radio" name="deployOptions" id="deployOption2" value="deployOption2">\n<label for="deployOption2">Deploy all units from [filtered squares] to\n<input type="number" value="" name="targetSquare">\n</label>\n</li>\n <li>\n<input type="radio" name="deployOptions" id="deployOption3" value="deployOption3">\n<label for="deployOption3">Deploy from\n<input type="number" value="" name="targetSquare"> to [filtered squares] so [units deployed from square]=\n<input type="number" value="" name="targetAmount">\n</label>\n</li>\n <li>\n<input type="radio" name="deployOptions" id="deployOption3" value="deployOption4">\n<label for="deployOption4">Deploy from\n<input type="number" value="" name="targetSquare"> to [filtered squares] so [units deployed on square]=\n<input type="number" value="" name="targetAmount">\n</label>\n</li>\n </ul> \n </div>\n <div class="collapsible collapsible-collapsed" id="exchange"> \n<input type="radio" name="commandOptions" id="choiceExchange" value="exchange"> <label for="choiceExchange">Exchange</label>\n <ul class="content" id="exchangeOptions"> \n <li>\n<input type="radio" name="exchangeOptions" id="exchangeOption1" value="exchangeOption1">\n<label for="exchangeOption1">Exchange\n<input type="number" value="" name="targetAmount"> units on [filtered squares]\n</label>\n</li>\n <li>\n<input type="radio" name="exchangeOptions" id="exchangeOption2" value="exchangeOption2">\n<label for="exchangeOption2">Exchange all units on [filtered squares] </label>\n</li>\n <li>\n<input type="radio" name="exchangeOptions" id="exchangeOption3" value="exchangeOption3">\n<label for="exchangeOption3">Exchange until [units] on [filtered squares]=\n<input type="number" value="" name="targetAmount">\n</label>\n</li>\n </ul> \n </div>\n <div class="collapsible collapsible-collapsed" id="graffiti"> \n<input type="radio" name="commandOptions" id="choiceGraffiti" value="graffiti"> <label for="choiceGraffiti">Graffiti</label>\n <ul class="content" id="graffitiOptions"> \n <li><input type="radio" name="graffitiOptions" id="graffitiOption1" value="graffitiOption1"><label for="graffitiOption1">Graffiti [filtered squares] with <input type="text" value=""></label></li>\n </ul> \n </div>\n <div class="collapsible collapsible-collapsed"id="razeF"> \n<input type="radio" name="commandOptions" id="choiceRazeFarms" value="razeFarms"> <label for="choiceRazeFarms">Raze Farms</label>\n <ul class="content" id="razeFarmsOptions"> \n <li>\n<input type="radio" name="razeFarmsOptions" id="razeFarmsOption1" value="razeFarmsOption1">\n<label for="razeFarmsOption1">raze f\n<input type="number" value="" name="targetAmount"> on [filtered squares]\n</label>\n</li>\n <li>\n<input type="radio" name="razeFarmsOptions" id="razeFarmsOption2" value="razeFarmsOption2"><label for="razeFarmsOption2">raze f all on [filtered squares]</label>\n</li>\n <li>\n<input type="radio" name="razeFarmsOptions" id="razeFarmsOption3" value="razeFarmsOption3">\n<label for="razeFarmsOption3">raze f until [farms] on [filtered squares]=\n<input type="number" value="" name="targetAmount">\n</label>\n</li>\n </ul> \n </div>\n <div class="collapsible collapsible-collapsed" id="razeC"> \n<input type="radio" name="commandOptions" id="choiceRazeCities" value="razeCities"> <label for="choiceRazeCities">Raze Cities</label>\n <ul class="content" id="razeFarmOptions"> \n <li>\n<input type="radio" name="razeCitiesOptions" id="razeCitiesOption1" value="razeCitiesOption1">\n<label for="razeCitiesOption1">raze c\n<input type="number" value="" name="targetAmount"> on [filtered squares]\n</label>\n</li>\n <li>\n<input type="radio" name="razeCitiesOptions" id="razeCitiesOption2" value="razeCitiesOption2">\n<label for="razeCitiesOption2">raze c all on [filtered squares]\n</label>\n</li>\n <li>\n<input type="radio" name="razeCitiesOptions" id="razeCitiesOption3" value="razeCitiesOption3">\n<label for="razeCitiesOption3">raze c until [cities] on [filtered squares]=\n<input type="number" value="" name="targetAmount">\n</label>\n</li>\n </ul> \n </div>\n <div class="collapsible collapsible-collapsed" id="rebels"> \n<input type="radio" name="commandOptions" id="choiceRebels" value="rebels"> <label for="choiceRebels">Rebels</label>\n <ul class="content" id="rebelOptions"> \n <li><input type="radio" name="rebelOptions" id="rebelOption1" value="rebelOption1"><label for="rebelOption1">r r [filtered squares]</label></li>\n <li><input type="radio" name="rebelOptions" id="rebelOption2" value="rebelOption2"><label for="rebelOption2">r i [filtered squares]</label></li>\n <li><input type="radio" name="rebelOptions" id="rebelOption3" value="rebelOptions3"><label for="rebelOptions3">r p <input type="number" value="" name="targetAmount"> [filtered squares]</label></li>\n <li><input type="radio" name="rebelOptions" id="rebelOption4" value="rebelOptions4"><label for="rebelOptions4">r p all [filtered squares]</label></li>\n </ul> \n </div>\n <div class="collapsible collapsible-collapsed"> \n<input type="radio" name="commandOptions" id="choiceAnnex" value="annex"> <label for="choiceAnnex">Annex</label>\n <ul class="content" id="annexOptions"> \n <li><input type="radio" name="annexOptions" id="annexOptions1" value="annexOptions1"><label for="annexOption1">annex [filtered squares]</label></li>\n </ul> \n </div>\n <div class="collapsible collapsible-collapsed" id="buildF"> \n<input type="radio" name="commandOptions" id="choiceFarms" value="farms"> <label for="choiceFarms">Build Farms</label>\n <ul class="content" id="farmOptions"> \n <li><input type="radio" name="farmOptions" id="farmOption1" value="farmOption1"><label for="farmOption1">f <input type="number" value="" name="targetAmount"> [filtered squares]</label></li><li><input type="radio" name="farmOptions" id="farmOption2" value="farmOption2"><label for="farmOption2">Build until f <input type="number" value="" name="targetAmount"> [filtered squares]</label></li>\n </ul> \n </div>\n <div class="collapsible collapsible-collapsed" id="buildC"> \n<input type="radio" name="commandOptions" id="choiceCities" value="citys"> <label for="choiceCities">Build Cities</label>\n <ul class="content" id="cityOptions"> \n <li><input type="radio" name="cityOptions" id="cityOption1" value="cityOption1"><label for="cityOption1">c <input type="number" value="" name="targetAmount"> [filtered squares]</label></li><li><input type="radio" name="cityOptions" id="cityOption2" value="cityOption2"><label for="cityOption2">Build until c <input type="number" value="" name="targetAmount"> [filtered squares]</label></li>\n </ul> \n </div>\n </div><div id="constructButtonF"><button id="constructButton">Construct Command</button></div>\n </div>\n <div id="constructedCommandPane"> \n <div style="text-align:center;font-size:1.25em">Constructed Command</div><div><textarea id="constructedCommand" name="constructedCommand" rows="10" cols="50"></textarea></div></div>\n </div>\n </div>\n</div>';
 		
@@ -418,92 +258,7 @@ function origreadUpdatedSquares(milliseconds) {
 		}
 	}
 
-	var parseGrid = function(){
-		document.querySelector('#masterTable').querySelectorAll("td").forEach(function(s){ 
-			var player, perm;
-			if(s.querySelector(".name") !== null){
-				var name = s.querySelector(".name").title.toLowerCase().trim()||"thegridadmin";
-				
-				if(players[name]||false){
-					player = players[name]
-				}
-				else{
-					player = new Player(name)
-					players[name] = player;
-				}
-				if(s.style.borderStyle.indexOf("double")!== -1){
-					perm = true;
-				}
-				else{
-					perm = false;
-				}
-				var id = Number(s.querySelector(".numberBox").textContent.trim())||0;
-				var units = Number(s.querySelector(".units").textContent.trim().split(",").join(""))||0;
-				var farms = Number(s.querySelectorAll(".structures span").item(0).textContent.trim())||0;
-				var cities = Number(s.querySelectorAll(".structures span").item(1).textContent.trim())||0;
-				var rebels = Number(s.querySelectorAll(".structures span").item(2).textContent.replace("R", "").trim())||0;
-				var graffiti = s.querySelector(".countryName").textContent.toLowerCase().trim()||"";
-				var domain = Math.ceil(id/42);
-				var borderColor = s.style.borderColor||"";
-				var color = s.style.color||"";
-				var alias = s.querySelector(".name").textContent;
-			}
-			else{
-				var name = "myst"
-				
-				if(players[name]||false){
-					player = players[name]
-				}
-				else{
-					player = new Player(name)
-					players[name] = player;
-				}
-			}
-			
-			var square = new Square(name, id, units, farms, cities, rebels, graffiti, perm, domain, borderColor, color, alias);
-			squares[id] = square;
-			player.squareList[id] = square;
-		});
-	};
-
-	var updateAllPlayers = function(){
-		for(var player in players){
-			var p = players[player];
-			p.update();
-		}
-	}
-
-	var run = function(){
-		squares = {};
-		players = {};
-		
-		parseGrid();
-		updateAllPlayers();
-		
-		squaresArray = objectToArray(squares);
-
-	}
-
-	var display = function(){
-		console.group();
-		for(var player in players){
-			var p = players[player];
-			console.groupCollapsed(player);
-				console.group("Basic Information");
-					console.log("Units: " + p.units, "  	Farms: " + p.farms, "   	Cities: " + p.cities, "		Rebels: " + p.rebels, " 	Squares " + p.squares, " 	Income: " + p.income, " 	Unit Production: " + p.unitProduction);
-					
-					console.groupCollapsed("Graffiti");
-						console.table(p.graffiti);
-					console.groupEnd();
-					
-					console.groupCollapsed("Squares:");
-						console.table(p.squareList);
-					console.groupEnd();
-				console.groupEnd();
-			console.groupEnd();
-		}
-		console.groupEnd();
-	}
+	
 	var filter = function(key, comp, value, square){
 		if(comp === "=" && square[key] == value){
 			return true;
@@ -528,6 +283,8 @@ function origreadUpdatedSquares(milliseconds) {
 		}
 	}
 	var filterSquares = function(sqs, parameters){
+		console.log(parameters);
+		console.log(sqs);
 		var matches = sqs;
 		var keys = Object.keys(parameters);
 		//var filterKeys = ["owner", "units", "rebels", "farms", "cities", "id", "graffiti", "perm"];
@@ -596,9 +353,6 @@ function origreadUpdatedSquares(milliseconds) {
 
 	var buildCommand = function(commandType, params){
 		var commandString = "";
-		console.log(commandType);
-		console.log(params);
-		console.log(filteredSquares);
 		if(commandType == "deployOption1"){
 			for(var i=0;i<filteredSquares.length;i++){
 				var square = filteredSquares[i];
@@ -794,8 +548,6 @@ function origreadUpdatedSquares(milliseconds) {
 		}
 	}
 		
-	run()
-	run();
 	constructUI();
 	addGlobalStyle("::-webkit-scrollbar {width: 12px;}");
 	addGlobalStyle("::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px;}");
@@ -819,7 +571,3 @@ function origreadUpdatedSquares(milliseconds) {
 	addGlobalStyle('#filterUI li { list-style: none; }');
 	addGlobalStyle('#tabs > span{padding: 0.5em;}');
 	addGlobalStyle('#constructedCommand {left: 20%;position: relative;}');
-
-
-	var runTimer = setInterval(run, runInterval);
-})()
