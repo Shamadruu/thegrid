@@ -1,9 +1,10 @@
-document.head.innerHTML += '<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>'
+(function(){
+	document.head.innerHTML += '<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>'
 //Override built in psybin function
-function Sq(){}
-function initTouchSq(){}
-function paintSqs(){}
-function origreadUpdatedSquares(){};
+window.Sq = function(){}
+window.initTouchSq = function(){}
+window.paintSqs = function(){}
+window.origreadUpdatedSquares = function(){};
 //Override psybin ui with fixed function
 function getDataAndUpdate() {
 	$.ajax({
@@ -111,3 +112,4 @@ getDataAndUpdate();
 updateLoop();
 document.body.querySelector("span").style.display = "none";
 chainTimer = 250;
+})();
