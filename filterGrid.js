@@ -1,5 +1,5 @@
 (function(){
-	document.head.innerHTML += '<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>'
+document.head.innerHTML += '<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>'
 //Override built in psybin function
 window.Sq = function(){}
 window.initTouchSq = function(){}
@@ -65,6 +65,11 @@ function update(response){
 	}
 }
 function updateLoop(timeout){
+	//refresh overrides for tampermonkey
+	window.Sq = function(){}
+	window.initTouchSq = function(){}
+	window.paintSqs = function(){}
+	window.origreadUpdatedSquares = function(){};
 	getDataAndUpdate();
 	window.clearTimeout(timeout);
 	timeout = window.setTimeout(function() {
