@@ -71,7 +71,7 @@ function updateLoop(timeout){
 	}, updateDelay);
 }
 var Square = function(name, id, units, farms, cities, rebels, graffiti, perm, domain, borderColor, color, alias) {
-	this.owner = name;
+	this.owner = name.toLowerCase();
 	this.id = id;
 	this.units = units;
 	this.farms = farms;
@@ -97,6 +97,14 @@ var updateSquares = function(data) {
 		var perm = square.p == 1;
 		squares[id] = new Square(square.nt, id, square.u, square.f, square.c, square.r, square.cn, perm, Math.ceil(id / 42), square.bc, square.co, square.na);
 	}
+	squaresArray = objectToArray(squares);
+}
+var objectToArray = function(obj){
+	var arr = [];
+	for(var key in obj){
+		arr.push(obj[key]);
+	}
+	return arr;
 }
 var updateDelay = 5000;
 getDataAndUpdate();
