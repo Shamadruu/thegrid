@@ -65,6 +65,10 @@ function update(response){
 	}
 }
 function updateLoop(timeout){
+	window.Sq = function(){}
+	window.initTouchSq = function(){}
+	window.paintSqs = function(){}
+	window.origreadUpdatedSquares = function(){};
 	getDataAndUpdate();
 	window.clearTimeout(timeout);
 	timeout = window.setTimeout(function() {
