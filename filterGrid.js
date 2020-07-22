@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
-// @version      0.2
+// @version      0.21
 // @description  try to take over the world!
 // @author       Shamadruu
 // @match        http://codeelf.com/games/the-grid-2/grid/?ui=1
@@ -80,6 +80,7 @@ function updateLoop(timeout){
 	window.initTouchSq = function(){}
 	window.paintSqs = function(){}
 	window.origreadUpdatedSquares = function(){};
+	window.chainTimer = 250;
 	getDataAndUpdate();
 	window.clearTimeout(timeout);
 	timeout = window.setTimeout(function() {
@@ -93,7 +94,7 @@ var Square = function(name, id, units, farms, cities, rebels, graffiti, perm, do
 	this.farms = farms;
 	this.cities = cities;
 	this.rebels = rebels;
-	this.graffiti = graffiti.toLowerCase()||undefined;
+	this.graffiti = (graffiti !== undefined) ? graffiti.toLowerCase() : undefined;
 	this.perm = perm;
 	this.domain = domain;
 	this.borderColor = '#' + borderColor;
