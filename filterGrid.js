@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
-// @version      0.1
+// @version      0.2
 // @description  try to take over the world!
 // @author       Shamadruu
 // @match        http://codeelf.com/games/the-grid-2/grid/?ui=1
@@ -93,7 +93,7 @@ var Square = function(name, id, units, farms, cities, rebels, graffiti, perm, do
 	this.farms = farms;
 	this.cities = cities;
 	this.rebels = rebels;
-	this.graffiti = graffiti;
+	this.graffiti = graffiti.toLowerCase();
 	this.perm = perm;
 	this.domain = domain;
 	this.borderColor = '#' + borderColor;
