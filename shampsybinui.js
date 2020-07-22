@@ -52,8 +52,7 @@ function origreadUpdatedSquares(milliseconds) {
                 if (read.data != undefined) {
                     dataLength = read.data.length;
                     readData = read.data;	
-                    //updateSquareObjs(readData);
-					parseGrid();
+                    updateSquares(readData);
                     for (var i = 0; i < dataLength; i++) {
                         id = read.data[i].td;
 						var square = squares[id];
@@ -165,15 +164,15 @@ function origreadUpdatedSquares(milliseconds) {
         return this;
     }
 
-    var squareObjs = {};
-    var updateSquareObjs = function(data) {
+    var squares = {};
+    var updateSquares = function(data) {
         for (var i=0;i<data.length;i++) {
 			var square = data[i];
             var id = square.td;
             var perm = square.p == 1;
-            squareObjs[id] = new Square(square.nt, id, square.u, square.f, square.c, square.r, square.cn, perm, Math.ceil(id / 42), square.bc, square.co, square.na);
+            squares[id] = new Square(square.nt, id, square.u, square.f, square.c, square.r, square.cn, perm, Math.ceil(id / 42), square.bc, square.co, square.na);
         }
     }
-	origreadUpdatedSquares(10000);
+	origreadUpdatedSquares(1000);
 	document.body.querySelector("span").style.display = "none";
-	chainTimer = 500;
+	chainTimer = 250;
