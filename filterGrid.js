@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
-// @version      0.21
+// @version      0.2
 // @description  try to take over the world!
 // @author       Shamadruu
 // @match        http://codeelf.com/games/the-grid-2/grid/?ui=1
@@ -57,7 +57,7 @@ function update(response){
 				str += '<span style="color:red;" id="r' + id + '"></span> </div>';
 			}
 			if(square.graffiti != undefined){
-				str += '<div class="countryName" style="color:#' + square.color + ';" id="cn' + id + '">' + square.graffiti + ' </div>';
+				str += '<div class="countryName" style="color:#' + square.color + ';" id="cn' + id + '">' + square.graffiti.toUpperCase() + ' </div>';
 			}
 			else{
 				str += '<div class="countryName" style="color:#' + square.color + ';" id="cn' + id + '"> </div>';
@@ -93,7 +93,7 @@ var Square = function(name, id, units, farms, cities, rebels, graffiti, perm, do
 	this.farms = farms;
 	this.cities = cities;
 	this.rebels = rebels;
-	this.graffiti = graffiti.toLowerCase||undefined;
+	this.graffiti = graffiti.toLowerCase()||undefined;
 	this.perm = perm;
 	this.domain = domain;
 	this.borderColor = '#' + borderColor;
