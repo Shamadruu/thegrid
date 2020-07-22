@@ -1,6 +1,9 @@
-//Override psybin ui with fixed function
+//Override psybin ui 
+function Sq(){}
+function initTouchSq(){}
+function paintSqs(){}
+function origreadUpdatedSquares(){};
 (function(){
-//Override built in psybin function
 function Sq(){}
 function initTouchSq(){}
 function paintSqs(){}
