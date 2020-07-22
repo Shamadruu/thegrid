@@ -1,9 +1,10 @@
-document.head.innerHTML += '<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>'
+(function(){
+	document.head.innerHTML += '<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>'
 //Override built in psybin function
-function Sq(){}
-function initTouchSq(){}
-function paintSqs(){}
-function origreadUpdatedSquares(){};
+window.Sq = function(){}
+window.initTouchSq = function(){}
+window.paintSqs = function(){}
+window.origreadUpdatedSquares = function(){};
 //fixes start here
 function getDataAndUpdate() {
 	$.ajax({
@@ -571,3 +572,4 @@ chainTimer = 250;
 	addGlobalStyle('#filterUI li { list-style: none; }');
 	addGlobalStyle('#tabs > span{padding: 0.5em;}');
 	addGlobalStyle('#constructedCommand {left: 20%;position: relative;}');
+})();
