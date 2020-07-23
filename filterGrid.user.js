@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Grid Command Builder
-// @namespace    https://github.com/Shamadruu/thegrid/blob/master/
-// @version      1.2
+// @namespace    https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
+// @version      1.4
 // @description  try to take over the world!
 // @author       Shamadruu
-// @downloadURL  https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.user.js
-// @updateURL    https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.user.js
+// @downloadURL  https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
+// @updateURL    https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
 // @match        http://codeelf.com/games/the-grid-2/grid/?ui=1
 // @grant        none
 // ==/UserScript==
@@ -15,7 +15,7 @@
     //Override built in psybin function
     window.Sq = function() {}
     window.initTouchSq = function() {}
-    window.paintSqs = function() {}
+    window.paintSqs = function() {} 
     window.origreadUpdatedSquares = function() {}
     window.readFile = function() {}
 	window.updateTime = function() {}
@@ -113,7 +113,7 @@
         var incoming = $("#incoming");
 		var initialChatText = incoming.html();
 		var finalChatText = response;
-		if (initialChatText != finalChatText) {
+		if (initialChatText != finalChatText && $("#incoming:hover").length != 1) {
 			//if a new message is last, scroll to the bottom
 			var element = document.getElementById("incoming");
 			element.scrollTop = element.scrollHeight;
@@ -130,7 +130,7 @@
 		var log = $("#log");
 		var initialLogText = log.html();
 		var finalLogText = response;
-		if(initialLogText != finalLogText){
+		if(initialLogText != finalLogText && $("#log:hover").length != 1){
 			var element = document.getElementById("log");
 			element.scrollTop = element.scrollHeight;
 		}
@@ -141,7 +141,7 @@
 		var news = $("#news");
 		var initialNewsText = news.html();
 		var finalNewsText = response;
-		if(initialNewsText != finalNewsText){
+		if(initialNewsText != finalNewsText && $("#news:hover").length != 1){
 			var element = document.getElementById("news");
 			element.scrollTop = element.scrollHeight;
 		}
