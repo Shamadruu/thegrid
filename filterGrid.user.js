@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
-// @version      1.62
+// @version      1.7
 // @description  try to take over the world!
 // @author       Shamadruu
 // @downloadURL  https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
@@ -563,7 +563,7 @@
                 var square = filteredSquares[i];
                 var val = params[0].value;
                 if (val > 0) {
-                    commandString += "r p " + val + " " + square.id + ";";
+                    commandString += "r p " + square.id + " "  + val +  ";";
                 }
             }
         } else if (commandType == "rebelOptions4") {
@@ -571,7 +571,7 @@
                 var square = filteredSquares[i];
                 var val = square.rebels;
                 if (val > 0) {
-                    commandString += "r p " + val + " " + square.id + ";";
+                    commandString += "r p " + square.id + " "  + val +  ";";
                 }
             }
         } else if (commandType == "annexOptions1") {
