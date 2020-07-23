@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
-// @version      1.5
+// @version      1.6
 // @description  try to take over the world!
 // @author       Shamadruu
 // @downloadURL  https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
@@ -22,48 +22,51 @@
     window.readLog = function(incomingMessageId, milliseconds, username, num){window.num = num;}
     //fixes start here
     function getDataAndUpdate() {
-		var num = window.num;
-        //Handle Squares
-        $.ajax({
-            url: "/games/the-grid-2/grid/updatedSquares.php",
-            success: updateSquares,
-            dataType: "json"
-        });
+		//Ease the load on the server by not updating the page when the tab isn't active.
+		if(!document.hidden){
+			var num = window.num;
+			//Handle Squares
+			$.ajax({
+				url: "/games/the-grid-2/grid/updatedSquares.php",
+				success: updateSquares,
+				dataType: "json"
+			});
 
-        //Update Chat
-        $.ajax({
-            url: "/games/the-grid-2/grid/txt/chat.txt",
-            success: updateChat,
-            dataType: "html"
-        });
-		
-		//Update Time
-        $.ajax({
-            url: "/games/the-grid-2/grid/updateTime.php",
-            success: updateTime,
-            dataType: "text"
-        });
-		
-		//Update Log
-        $.ajax({
-            url: "/games/the-grid-2/grid/txt/users/" + window.num + "_log.txt",
-            success: updateLog,
-            dataType: "html"
-        });
-		
-		//Update News
-        $.ajax({
-            url: "/games/the-grid-2/grid/txt/eventLog.txt",
-            success: updateNews,
-            dataType: "html"
-        });
-		
-		//Update Players
-        $.ajax({
-            url: "/games/the-grid-2/grid/updatePlayers.php",
-            success: updatePlayers,
-            dataType: "html"
-        });
+			//Update Chat
+			$.ajax({
+				url: "/games/the-grid-2/grid/txt/chat.txt",
+				success: updateChat,
+				dataType: "html"
+			});
+			
+			//Update Time
+			$.ajax({
+				url: "/games/the-grid-2/grid/updateTime.php",
+				success: updateTime,
+				dataType: "text"
+			});
+			
+			//Update Log
+			$.ajax({
+				url: "/games/the-grid-2/grid/txt/users/" + window.num + "_log.txt",
+				success: updateLog,
+				dataType: "html"
+			});
+			
+			//Update News
+			$.ajax({
+				url: "/games/the-grid-2/grid/txt/eventLog.txt",
+				success: updateNews,
+				dataType: "html"
+			});
+			
+			//Update Players
+			$.ajax({
+				url: "/games/the-grid-2/grid/updatePlayers.php",
+				success: updatePlayers,
+				dataType: "html"
+			});
+		}
     }
 
     function updateSquares(response) {
