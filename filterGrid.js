@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://github.com/Shamadruu/thegrid/blob/master/
-// @version      0.32
+// @version      1.1
 // @description  try to take over the world!
 // @author       Shamadruu
 // @downloadURL  https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
