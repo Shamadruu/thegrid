@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
-// @version      0.31
+// @version      0.32
 // @description  try to take over the world!
 // @author       Shamadruu
+// @downloadURL  https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
+// @updateURL    https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
 // @match        http://codeelf.com/games/the-grid-2/grid/?ui=1
 // @grant        none
 // ==/UserScript==
