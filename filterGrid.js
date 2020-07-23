@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
-// @version      0.22
+// @version      0.23
 // @description  try to take over the world!
 // @author       Shamadruu
 // @match        http://codeelf.com/games/the-grid-2/grid/?ui=1
@@ -16,6 +16,7 @@
     window.paintSqs = function() {}
     window.origreadUpdatedSquares = function() {}
     window.readFile = function() {}
+	window.updateTime = function() {}
     //fixes start here
     function getDataAndUpdate() {
         //Handle Squares
@@ -29,6 +30,13 @@
         $.ajax({
             url: "/games/the-grid-2/grid/txt/chat.txt",
             success: updateChat,
+            dataType: "text"
+        });
+		
+		//Update Time
+        $.ajax({
+            url: "/games/the-grid-2/grid/updateTime.php",
+            success: updateTime,
             dataType: "text"
         });
     }
@@ -89,6 +97,11 @@
             }
         }
     }
+	
+	function updateTime(response){
+		var clock = $("#clock");
+		clock.text(response);
+	}
 
     function updateLoop(timeout) {
         //refresh overrides for tampermonkey
@@ -98,6 +111,7 @@
         window.origreadUpdatedSquares = function() {};
         window.chainTimer = chainDelay;
         window.readFile = function() {};
+		window.updateTime = function() {}
         getDataAndUpdate();
         window.clearTimeout(timeout);
         timeout = window.setTimeout(function() {
