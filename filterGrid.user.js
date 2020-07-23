@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://github.com/Shamadruu/thegrid/raw/master/
-// @version      1.82
+// @version      1.821
 // @description  try to take over the world!
 // @author       Shamadruu
 // @downloadURL  https://github.com/Shamadruu/thegrid/raw/master/filterGrid.user.js
@@ -80,7 +80,7 @@
             if (square.graffiti == undefined && td != null) {
                 square.graffiti = document.getElementById("cn" + id).textContent.toLowerCase();
             }
-            if (td) != null && square.graffiti != "MSYT") {
+            if (td != null && square.graffiti != "MSYT") {
                 var str = "";
                 str += '<span class="numberBox" style="color:silver;" id="numberBox' + id + '">' + id + '</span><div class="name" title="" style="color:' + square.color + ';" id="name' + id + '">' + square.alias + '</div><div class="units" style="color:silver;" id="u' + id + '">' + commafy(square.units) + '</div><div class="structures">';
                 if (square.farms != undefined && square.farms > 0) {
