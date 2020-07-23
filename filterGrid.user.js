@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
-// @version      1.6
+// @version      1.61
 // @description  try to take over the world!
 // @author       Shamadruu
 // @downloadURL  https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
@@ -75,7 +75,7 @@
         for (var i = 0; i < data.length; i++) {
             var id = data[i].td;
             var square = squares[id];
-            if (square.graffiti == undefined) {
+            if (square.graffiti == undefined && document.getElementById(tdId) != null) {
                 square.graffiti = document.getElementById("cn" + id).textContent.toLowerCase();
             }
             var tdId = "td" + id;
@@ -109,6 +109,11 @@
                 td.style.color = square.color;
 
             }
+			else if(document.getElementById(tdId) == null){
+				//add a new row to the table and populate it with the new squares
+				var tableBody = $("#masterTable tbody");
+				tableBody.append('<tr title="Domain ' + Math.ceil(td/42) + '"><td id="td' + id + '"</td><td id="td' + (id+1) + '"</td><td id="td' + (id+2) + '"</td><td id="td' + (id+3) + '"</td><td id="td' + (id+4) + '"</td><td id="td' + (id+5) + '"</td></tr>');
+			}				
         }
     }
 
