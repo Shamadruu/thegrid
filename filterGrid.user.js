@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
-// @version      1.61
+// @version      1.62
 // @description  try to take over the world!
 // @author       Shamadruu
 // @downloadURL  https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
@@ -110,9 +110,12 @@
 
             }
 			else if(document.getElementById(tdId) == null){
-				//add a new row to the table and populate it with the new squares
 				var tableBody = $("#masterTable tbody");
-				tableBody.append('<tr title="Domain ' + Math.ceil(td/42) + '"><td id="td' + id + '"</td><td id="td' + (id+1) + '"</td><td id="td' + (id+2) + '"</td><td id="td' + (id+3) + '"</td><td id="td' + (id+4) + '"</td><td id="td' + (id+5) + '"</td></tr>');
+				//check if a new row needs to be added to the table (I don't think I actually need to do this, but I'd like to be sure)
+				if($("#masterTable tbody tr").length < Math.ceil(id/6)){
+					//add a new row to the table and populate it with the new squares
+					tableBody.append('<tr title="Domain ' + Math.ceil(td/42) + '"><td id="td' + id + '"</td><td id="td' + (id+1) + '"</td><td id="td' + (id+2) + '"</td><td id="td' + (id+3) + '"</td><td id="td' + (id+4) + '"</td><td id="td' + (id+5) + '"</td></tr>');
+				}	
 			}				
         }
     }
