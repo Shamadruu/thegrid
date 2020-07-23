@@ -1,5 +1,5 @@
 (function(){ 
-	var chainDelay = 250;
+	 var chainDelay = 250;
     document.head.innerHTML += '<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>'
     //Override built in psybin function
     window.Sq = function() {}
@@ -7,8 +7,11 @@
     window.paintSqs = function() {}
     window.origreadUpdatedSquares = function() {}
     window.readFile = function() {}
+	window.updateTime = function() {}
+    window.readLog = function(incomingMessageId, milliseconds, username, num){window.num = num;}
     //fixes start here
     function getDataAndUpdate() {
+		var num = window.num;
         //Handle Squares
         $.ajax({
             url: "/games/the-grid-2/grid/updatedSquares.php",
@@ -20,7 +23,35 @@
         $.ajax({
             url: "/games/the-grid-2/grid/txt/chat.txt",
             success: updateChat,
+            dataType: "html"
+        });
+		
+		//Update Time
+        $.ajax({
+            url: "/games/the-grid-2/grid/updateTime.php",
+            success: updateTime,
             dataType: "text"
+        });
+		
+		//Update Log
+        $.ajax({
+            url: "/games/the-grid-2/grid/txt/users/" + window.num + "_log.txt",
+            success: updateLog,
+            dataType: "html"
+        });
+		
+		//Update News
+        $.ajax({
+            url: "/games/the-grid-2/grid/txt/eventLog.txt",
+            success: updateNews,
+            dataType: "html"
+        });
+		
+		//Update Players
+        $.ajax({
+            url: "/games/the-grid-2/grid/updatePlayers.php",
+            success: updatePlayers,
+            dataType: "html"
         });
     }
 
@@ -68,18 +99,48 @@
     }
 
     function updateChat(response) {
-        var element = document.getElementById("incoming");
-        if ($('#incoming').children().length > 3) {
-            //Don't try this if the chat log is empty
-            var previousLastMessage = $('#incoming').children().eq(-2).html();
-            $('#incoming').html(response);
-            var newLastMessage = $('#incoming').children().eq(-2).html();
-            if (newLastMessage != previousLastMessage) {
-                //if a new message is last, scroll to the bottom
-                element.scrollTop = element.scrollHeight;
-            }
-        }
+        var incoming = $("#incoming");
+		var initialChatText = incoming.html();
+		var finalChatText = response;
+		if (initialChatText != finalChatText) {
+			//if a new message is last, scroll to the bottom
+			var element = document.getElementById("incoming");
+			element.scrollTop = element.scrollHeight;
+		}
+		incoming.html(response);
     }
+	
+	function updateTime(response){
+		var clock = $("#clock");
+		clock.text(response);
+	}
+	
+	function updateLog(response){
+		var log = $("#log");
+		var initialLogText = log.html();
+		var finalLogText = response;
+		if(initialLogText != finalLogText){
+			var element = document.getElementById("log");
+			element.scrollTop = element.scrollHeight;
+		}
+		log.html(response);
+	}
+	
+	function updateNews(response){
+		var news = $("#news");
+		var initialNewsText = news.html();
+		var finalNewsText = response;
+		if(initialNewsText != finalNewsText){
+			var element = document.getElementById("news");
+			element.scrollTop = element.scrollHeight;
+		}
+		news.html(response);
+	}
+	
+	function updatePlayers(response){
+		var players = $("#stats");
+		players.html(response);
+	}
 
     function updateLoop(timeout) {
         //refresh overrides for tampermonkey
@@ -89,6 +150,8 @@
         window.origreadUpdatedSquares = function() {};
         window.chainTimer = chainDelay;
         window.readFile = function() {};
+		window.updateTime = function() {}
+		window.readLog = function(incomingMessageId, milliseconds, username, num){window.num = num;}
         getDataAndUpdate();
         window.clearTimeout(timeout);
         timeout = window.setTimeout(function() {
