@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://github.com/Shamadruu/thegrid/raw/master/
-// @version      1.8
+// @version      1.81
 // @description  try to take over the world!
 // @author       Shamadruu
 // @downloadURL  https://github.com/Shamadruu/thegrid/raw/master/filterGrid.user.js
@@ -215,7 +215,7 @@
     document.body.querySelector("span").style.display = "none";
     chainTimer = chainDelay;
 
-    document.querySelector("#terminal").maxLength = 2500;
+    document.querySelector("#terminal").maxLength = 5000;
     var squares = {};
     var squaresArray;
     var functionalGraffities = ["wall", "spire", "domlord", "seer", "castle", "gnome", "longsheng", "myst", "nospawn", "pil-a", "pil-n", "pil-s", "monk", "rebel", "samurai", "sea", "seer", "spawn", "sword", "thug", "wildcard", "windmill"];
