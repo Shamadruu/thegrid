@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://github.com/Shamadruu/thegrid/raw/master/
-// @version      1.81
+// @version      1.82
 // @description  try to take over the world!
 // @author       Shamadruu
 // @downloadURL  https://github.com/Shamadruu/thegrid/raw/master/filterGrid.user.js
@@ -74,14 +74,13 @@
         updateSquaresObj(data);
         for (var i = 0; i < data.length; i++) {
             var id = data[i].td;
+			var tdId = "td" + id;
+			var td = document.getElementById(tdId);
             var square = squares[id];
-            if (square.graffiti == undefined && document.getElementById(tdId) != null) {
+            if (square.graffiti == undefined && td != null) {
                 square.graffiti = document.getElementById("cn" + id).textContent.toLowerCase();
             }
-            var tdId = "td" + id;
-            if (document.getElementById(tdId) != null && square.graffiti != "MSYT") {
-                var td = document.getElementById(tdId);
-
+            if (td) != null && square.graffiti != "MSYT") {
                 var str = "";
                 str += '<span class="numberBox" style="color:silver;" id="numberBox' + id + '">' + id + '</span><div class="name" title="" style="color:' + square.color + ';" id="name' + id + '">' + square.alias + '</div><div class="units" style="color:silver;" id="u' + id + '">' + commafy(square.units) + '</div><div class="structures">';
                 if (square.farms != undefined && square.farms > 0) {
