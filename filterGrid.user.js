@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
-// @version      1.4
+// @version      1.5
 // @description  try to take over the world!
 // @author       Shamadruu
 // @downloadURL  https://raw.githubusercontent.com/Shamadruu/thegrid/master/filterGrid.js
@@ -73,7 +73,7 @@
             var id = data[i].td;
             var square = squares[id];
             if (square.graffiti == undefined) {
-                square.graffiti = document.getElementById("cn" + id).textContent;
+                square.graffiti = document.getElementById("cn" + id).textContent.toLowerCase();
             }
             var tdId = "td" + id;
             if (document.getElementById(tdId) != null && square.graffiti != "MSYT") {
