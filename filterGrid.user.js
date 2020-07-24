@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://github.com/Shamadruu/thegrid/raw/master/
-// @version      1.83
+// @version      1.84
 // @description  try to take over the world!
 // @author       Shamadruu
 // @downloadURL  https://github.com/Shamadruu/thegrid/raw/master/filterGrid.user.js
@@ -213,6 +213,11 @@
     updateLoop();
     document.body.querySelector("span").style.display = "none";
     chainTimer = chainDelay;
+	
+	//update manually when the window gains focus
+	$(window).on("focus", function(){
+		getDataAndUpdate();
+	});
 
     document.querySelector("#terminal").maxLength = 5000;
     var squares = {};
