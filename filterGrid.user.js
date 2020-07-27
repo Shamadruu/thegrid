@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://github.com/Shamadruu/thegrid/raw/master/
-// @version      1.88
+// @version      1.89
 // @description  try to take over the world!
 // @author       Shamadruu
 // @downloadURL  https://github.com/Shamadruu/thegrid/raw/master/filterGrid.user.js
@@ -662,10 +662,10 @@
         }
     }
 
-    constructUI();
+    constructUI();/*
     addGlobalStyle("::-webkit-scrollbar {width: 12px;}");
     addGlobalStyle("::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px;}");
-    addGlobalStyle("::-webkit-scrollbar-thumb {border-radius: 10px;-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }");
+    addGlobalStyle("::-webkit-scrollbar-thumb {border-radius: 10px;-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }");*/
     addGlobalStyle('#filterParameters {width: 50%;float: left;border-right: 2px solid #999;height: 100%;}');
     addGlobalStyle("#filterOutputPane {height: calc(500px - 1em);}");
     addGlobalStyle('#filterOutput {overflow-y: auto; height:calc(100% - 1em); }');
