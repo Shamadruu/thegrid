@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://github.com/Shamadruu/thegrid/raw/master/
-// @version      1.9
+// @version      1.91
 // @description  try to take over the world!
 // @author       Shamadruu
 // @downloadURL  https://github.com/Shamadruu/thegrid/raw/master/filterGrid.user.js
@@ -125,6 +125,7 @@
                 td.innerHTML = str;
                 td.style.borderColor = square.borderColor;
                 td.style.color = square.color;
+				td.style.visibility = "visibile";
 				if(square.perm){
 					td.style.borderStyle = "double";
 				}
