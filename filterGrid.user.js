@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://github.com/Shamadruu/thegrid/raw/master/
-// @version      1.91
+// @version      1.92
 // @description  try to take over the world!
 // @author       Shamadruu
 // @downloadURL  https://github.com/Shamadruu/thegrid/raw/master/filterGrid.user.js
@@ -125,11 +125,10 @@
                 td.innerHTML = str;
                 td.style.borderColor = square.borderColor;
                 td.style.color = square.color;
-				td.style.visibility = "visibile";
 				if(square.perm){
 					td.style.borderStyle = "double";
 				}
-
+				td.style.visibility = "visible"
             }
 			else if(td == null){
 				var tableBody = $("#masterTable tbody");
@@ -138,7 +137,10 @@
 					//add a new row to the table and populate it with the new squares
 					tableBody.append('<tr title="Domain ' + Math.ceil(id/42) + '"><td id="td' + id + '"></td><td id="td' + (id+1) + '"></td><td id="td' + (id+2) + '"></td><td id="td' + (id+3) + '"></td><td id="td' + (id+4) + '"></td><td id="td' + (id+5) + '"></td></tr>');
 				}	
-			}				
+			}
+			else if(square.graffiti == "MYST"){
+				td.style.visibility = "hidden";
+			}	
         }
     }
 
