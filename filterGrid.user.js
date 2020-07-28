@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://github.com/Shamadruu/thegrid/raw/master/
-// @version      1.92
+// @version      1.93
 // @description  try to take over the world!
 // @author       Shamadruu
 // @downloadURL  https://github.com/Shamadruu/thegrid/raw/master/filterGrid.user.js
@@ -318,7 +318,8 @@
                     optionParameters.push(param);
                 }
                 commandString = buildCommand(selectedOption, optionParameters);
-                filterUI.querySelector("#constructedCommand").textContent = commandString;
+				//console.log($("#constructedCommand"));
+                $("#constructedCommand").val(commandString);
             }
         }
         //set up commands collapsible elements
@@ -493,6 +494,7 @@
 
     var buildCommand = function(commandType, params) {
         var commandString = "";
+		
         if (commandType == "deployOption1") {
             for (var i = 0; i < filteredSquares.length; i++) {
                 var square = filteredSquares[i];
@@ -650,6 +652,7 @@
                 commandString += "ab " + square.id + ";";
             }
 		}
+		//console.log(commandString);
         return commandString;
     }
 
