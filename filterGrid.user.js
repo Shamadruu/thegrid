@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://github.com/Shamadruu/thegrid/raw/master/
-// @version      1.95
+// @version      1.96
 // @description  try to take over the world!
 // @author       Shamadruu
 // @downloadURL  https://github.com/Shamadruu/thegrid/raw/master/filterGrid.user.js
@@ -41,7 +41,7 @@
 			updateTime();
 			updateLog();
 			updateNews();
-
+			updatePlayers();
 		}
     }
 
