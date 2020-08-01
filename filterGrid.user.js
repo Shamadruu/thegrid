@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://github.com/Shamadruu/thegrid/raw/master/
-// @version      1.97
+// @version      1.98
 // @description  try to take over the world!
 // @author       Shamadruu
 // @downloadURL  https://github.com/Shamadruu/thegrid/raw/master/filterGrid.user.js
@@ -129,13 +129,13 @@
 			}
 			let incoming = $("#incoming");
 			let initialChatText = incoming.html();
-			let finalChatText = $(response).html();
+			let finalChatText = response;
 			if (initialChatText != finalChatText && $("#incoming:hover").length != 1) {
 				//if a new message is last, scroll to the bottom
 				let element = document.getElementById("incoming");
 				element.scrollTop = element.scrollHeight;
 			}
-			if(initialChatText != finalChatText){
+			if(incoming.html() != response){
 				incoming.html(response);
 			}
 		}
@@ -177,12 +177,12 @@
 				}
 				var log = $("#log");
 				var initialLogText = log.html();
-				var finalLogText = $(response).html();
+				var finalLogText = response;
 				if(initialLogText != finalLogText && $("#log:hover").length != 1){
 					var element = document.getElementById("log");
 					element.scrollTop = element.scrollHeight;
 				}
-				if(initialLogText != finalLogText){
+				if(log.html() != response){
 					log.html(response);
 				}
 			}
@@ -205,12 +205,12 @@
 			}
 			var news = $("#news");
 			var initialNewsText = news.html();
-			var finalNewsText = $(response).html();
+			var finalNewsText = response;
 			if(initialNewsText != finalNewsText && $("#news:hover").length != 1){
 				var element = document.getElementById("news");
 				element.scrollTop = element.scrollHeight;
 			}
-			if(initialNewsText != finalNewsText){
+			if(news.html() != response){
 				news.html(response);
 			}
 		}
