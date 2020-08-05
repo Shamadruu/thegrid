@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grid Command Builder
 // @namespace    https://github.com/Shamadruu/thegrid/raw/master/
-// @version      1.98
+// @version      1.99
 // @description  try to take over the world!
 // @author       Shamadruu
 // @downloadURL  https://github.com/Shamadruu/thegrid/raw/master/filterGrid.user.js
@@ -97,6 +97,45 @@
 						td.style.borderStyle = "double";
 					}
 					td.style.visibility = "visible"
+					
+					//manage thick borders for domains
+					if(squaresArray.length >= square.domain * 42){
+						var lastColor = squares[square.domain*42].borderColor;
+						//this domain is complete
+						if(id%6 == 1){
+							//left border
+							td.style.borderLeftWidth = "8px";
+							td.style.borderLeftStyle = "solid";
+							td.style.borderLeftColor = lastColor
+						}
+						else if(id%6 == 0){
+							//right border
+							td.style.borderRightWidth = "8px";
+							td.style.borderRightStyle = "solid";
+							td.style.borderRightColor = lastColor;
+						}
+						//check for top/bottom
+						if(id%42 <= 6 && id%42 > 0){
+							//set top border
+							td.style.borderTopWidth = "8px";
+							td.style.borderTopStyle = "solid";
+							td.style.borderTopColor = lastColor;
+						}
+						else if(id%42 > 36 || id%42 == 0){
+							//set bottom border
+							td.style.borderBottomWidth = "8px";
+							td.style.borderBottomStyle = "solid";
+							td.style.borderBottomColor = lastColor;
+						}
+						if(id%42 == 0){
+							td.style.borderWidth = "8px";
+							td.style.borderStyle = "solid";
+							td.style.borderColor = lastColor;
+						}
+					}
+					else{
+						
+					}
 				}
 				else if(td == null){
 					var tableBody = $("#masterTable tbody");
@@ -129,13 +168,13 @@
 			}
 			let incoming = $("#incoming");
 			let initialChatText = incoming.html();
-			let finalChatText = response;
+			let finalChatText = response
 			if (initialChatText != finalChatText && $("#incoming:hover").length != 1) {
 				//if a new message is last, scroll to the bottom
 				let element = document.getElementById("incoming");
 				element.scrollTop = element.scrollHeight;
 			}
-			if(incoming.html() != response){
+			if(initialChatText != finalChatText){
 				incoming.html(response);
 			}
 		}
